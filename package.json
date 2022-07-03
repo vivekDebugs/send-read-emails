@@ -1,0 +1,19 @@
+{
+  "name": "read-emails",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "magic": "node src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "html-to-text": "^8.2.0",
+    "imap-simple": "^5.1.0",
+    "nodemailer": "^6.7.6"
+  }
+}
