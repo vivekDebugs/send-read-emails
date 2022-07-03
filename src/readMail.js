@@ -14,7 +14,6 @@ const readMail = async () => {
   try {
     const connection = await imaps.connect(READ_MAIL_CONFIG)
     console.log('✔ Connection successful')
-    await connection.openBox(FOLDERS.inbox)
 
     const searchCriteria = ['UNSEEN', ['FROM', SENDER_AUTH.user]]
     const fetchOptions = {
@@ -22,7 +21,13 @@ const readMail = async () => {
       markSeen: true,
     }
 
-    const results = await connection.search(searchCriteria, fetchOptions)
+    await connection.openBox(FOLDERS.inbox)
+    let results = await connection.search(searchCriteria, fetchOptions)
+
+    if (!results.length) {
+      await connection.openBox(FOLDERS.spam)
+      results = await connection.search(searchCriteria, fetchOptions)
+    }
 
     const lastEmail = results
       .at(-1)
