@@ -8,7 +8,7 @@ const main = async () => {
   const isMailSent = await sendMail(confirmationCode)
   if (isMailSent) {
     const lastEmailText = await readMail()
-    const code = lastEmailText.match(regex)[0]
+    const code = lastEmailText?.match(regex)?.[0]
     console.log({ confirmationCode, code })
   }
 }

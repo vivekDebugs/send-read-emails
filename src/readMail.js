@@ -2,21 +2,32 @@ const imaps = require('imap-simple')
 const { convert } = require('html-to-text')
 const { READ_MAIL_CONFIG, SENDER_AUTH } = require('./config')
 
+const FOLDERS = {
+  inbox: 'INBOX',
+  spam: '[Gmail]/Spam',
+  sent: '[Gmail]/Sent Mail',
+  drafts: '[Gmail]/Drafts',
+  all: '[Gmail]/All Mail',
+}
+
 const readMail = async () => {
   try {
     const connection = await imaps.connect(READ_MAIL_CONFIG)
     console.log('✔ Connection successful')
-    await connection.openBox('INBOX')
+    await connection.openBox(FOLDERS.inbox)
+
     const searchCriteria = ['UNSEEN', ['FROM', SENDER_AUTH.user]]
     const fetchOptions = {
       bodies: ['HEADER', 'TEXT'],
-      markSeen: false,
+      markSeen: true,
     }
 
     const results = await connection.search(searchCriteria, fetchOptions)
 
-    const lastEmail = results.at(-1).parts.filter(part => part.which === 'TEXT')
-    const lastEmailText = convert(lastEmail[0].body)
+    const lastEmail = results
+      .at(-1)
+      ?.parts.filter(part => part.which === 'TEXT')
+    const lastEmailText = convert(lastEmail?.[0].body)
     connection.end()
 
     return lastEmailText
